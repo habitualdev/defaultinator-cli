@@ -2,12 +2,12 @@ package endpoints
 
 import (
 	"encoding/json"
-	"fmt"
+	"errors"
 	"io"
 	"net/http"
 )
 
-func (c Client) TypeAhead(searchMap map[string]string) TypeAheadList {
+func (c Client) TypeAhead(searchMap map[string]string) (TypeAheadList, error) {
 	typeAheadList := TypeAheadList{}
 	url := c.BaseUrl + "/dictionary/typeahead/?"
 	for key, value := range searchMap {
@@ -16,6 +16,9 @@ func (c Client) TypeAhead(searchMap map[string]string) TypeAheadList {
 		}
 	}
 	for key, value := range searchMap {
+		if value == "" {
+			continue
+		}
 		for _, field := range QueryFields {
 			if key == field {
 				if key != "field" {
@@ -29,20 +32,17 @@ func (c Client) TypeAhead(searchMap map[string]string) TypeAheadList {
 	resp, _ := c.Client.Do(c.Request)
 	defer resp.Body.Close()
 	if resp.StatusCode != 200 {
-		println("Response Code: " + resp.Status)
 		defer resp.Body.Close()
 		body, _ := io.ReadAll(resp.Body)
-		fmt.Println("Message: " + string(body))
-		return typeAheadList
+		return typeAheadList, errors.New("Response Code: " + resp.Status + " Message: " + string(body))
 	}
 	body, _ := io.ReadAll(resp.Body)
 	err := json.Unmarshal(body, &typeAheadList)
 	if err != nil {
-		println(err.Error())
-		return typeAheadList
+		return typeAheadList, err
 	}
 
-	return typeAheadList
+	return typeAheadList, nil
 }
 
 // Unimplented

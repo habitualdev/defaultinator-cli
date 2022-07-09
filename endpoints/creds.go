@@ -2,13 +2,13 @@ package endpoints
 
 import (
 	"encoding/json"
-	"fmt"
+	"errors"
 	"io"
 	"net/http"
 	"strconv"
 )
 
-func (c Client) SearchCredentials(searchMap map[string]string) CredentialDocumentList {
+func (c Client) SearchCredentials(searchMap map[string]string) (CredentialDocumentList, error) {
 	tempCredentialDocumentList := CredentialDocumentList{}
 	morePages := true
 	url := c.BaseUrl + "/credentials/search?"
@@ -28,22 +28,19 @@ func (c Client) SearchCredentials(searchMap map[string]string) CredentialDocumen
 		c.addHeaders()
 		resp, err := c.Client.Do(c.Request)
 		if page == 1 && resp.StatusCode != 200 {
-			println(resp.Status)
 			defer resp.Body.Close()
 			body, _ := io.ReadAll(resp.Body)
-			fmt.Println(string(body))
-			return tempCredentialDocumentList
+			return tempCredentialDocumentList, errors.New("Response Code: " + resp.Status + " Message: " + string(body))
 		}
 		if err != nil || resp.StatusCode != 200 {
 			morePages = false
 			continue
 		}
-		println("Page: " + strconv.Itoa(page))
 		defer resp.Body.Close()
 		body, _ := io.ReadAll(resp.Body)
 		err = json.Unmarshal(body, &bodyList)
 		if err != nil {
-			println(err.Error())
+			return CredentialDocumentList{}, err
 		}
 		if page == bodyList.Pages+1 {
 			println("No more pages")
@@ -54,7 +51,7 @@ func (c Client) SearchCredentials(searchMap map[string]string) CredentialDocumen
 		tempCredentialDocumentList.Docs = append(tempCredentialDocumentList.Docs, bodyList.Docs...)
 		page++
 	}
-	return tempCredentialDocumentList
+	return tempCredentialDocumentList, nil
 }
 
 // Unimplented

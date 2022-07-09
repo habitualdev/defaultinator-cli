@@ -49,8 +49,15 @@ func main() {
 	fmt.Println(Splash)
 
 	if apiKey == "" {
-		fmt.Println("Please provide an api key")
-		return
+		if tui {
+			fmt.Println("You must provide an API key")
+			fmt.Print("API Key: ")
+			fmt.Scanln(&apiKey)
+
+		} else {
+			fmt.Println("Please provide an api key")
+			return
+		}
 	}
 	if !tui {
 		if searchType == "Search" {
@@ -74,7 +81,11 @@ func main() {
 			if part != "" {
 				search["part"] = part
 			}
-			list := c.SearchCredentials(search)
+			list, err := c.SearchCredentials(search)
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
 			data, err := json.Marshal(list.Docs)
 			if err != nil {
 				fmt.Println(err.Error())
@@ -111,7 +122,11 @@ func main() {
 				search["part"] = part
 			}
 
-			typeahead := c.TypeAhead(search)
+			typeahead, err := c.TypeAhead(search)
+			if err != nil {
+				fmt.Println(err.Error())
+				os.Exit(1)
+			}
 			data, err := json.Marshal(typeahead)
 			if err != nil {
 				fmt.Println(err.Error())
@@ -128,6 +143,6 @@ func main() {
 			}
 		}
 	} else {
-		fmt.Println("TUI not implemented yet")
+		StartTui(apiKey)
 	}
 }
