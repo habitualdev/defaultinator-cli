@@ -6,9 +6,6 @@ Basically, it's a command line interface for Defaultinator.
 
 At this time it is a "read-only" interface, but it will be expanded in the future.
 
-Also to be implemented is a graphical terminal interface.
-
-
 ## Usage
 
 ```
@@ -26,7 +23,7 @@ Also to be implemented is a graphical terminal interface.
         search password
   -product 
         search product
-  -tui <NOT IMPLEMENTED>
+  -tui
         launch the tui
   -type 
         Choose Typeahead or Search (default "Search")
@@ -35,3 +32,6 @@ Also to be implemented is a graphical terminal interface.
   -vendor
         search vendor
 ```
+
+## TUI Interface 
+![img.png](img.png)

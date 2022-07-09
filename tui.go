@@ -3,6 +3,7 @@ package main
 import (
 	"defaultinator-cli/endpoints"
 	"encoding/json"
+	"github.com/atotto/clipboard"
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
 	"time"
@@ -146,11 +147,21 @@ func StartTui(apiKey string) {
 	leftPane.AddItem(typeAheadWindow, 2, 0, 1, 1, 0, 0, false)
 
 	// Right Pane - Text display
+	rightSide := tview.NewGrid().SetRows(0, 3)
+
 	rightPane := tview.NewTextView().SetText("Defaultinator-CLI")
 	rightPane.SetBorder(true).SetTitle("Results")
 
+	copyButton := tview.NewButton("Copy to Clipboard").SetSelectedFunc(func() {
+		clipboard.WriteAll(rightPane.GetText(true))
+	})
+	copyButton.SetBorder(true).SetBackgroundColor(tcell.ColorDarkRed)
+
+	rightSide.AddItem(rightPane, 0, 0, 1, 1, 0, 0, false)
+	rightSide.AddItem(copyButton, 1, 0, 1, 1, 0, 0, false)
+
 	mainWindow.AddItem(leftPane, 0, 0, 1, 1, 0, 0, false)
-	mainWindow.AddItem(rightPane, 0, 1, 1, 1, 0, 0, false)
+	mainWindow.AddItem(rightSide, 0, 1, 1, 1, 0, 0, false)
 
 	// Start the goroutine that updates the panes.
 	go func() {
