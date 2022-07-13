@@ -1,11 +1,11 @@
 package main
 
 import (
-	"defaultinator-cli/endpoints"
-	"defaultinator-cli/utils"
 	"encoding/json"
 	"flag"
 	"fmt"
+	"github.com/roaldi/defaultinator-cli/endpoints"
+	"github.com/roaldi/defaultinator-cli/utils"
 	"os"
 )
 
