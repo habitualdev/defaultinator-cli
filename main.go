@@ -2,6 +2,7 @@ package main
 
 import (
 	"defaultinator-cli/endpoints"
+	"defaultinator-cli/utils"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -32,7 +33,7 @@ by habitual`
 func init() {
 	flag.BoolVar(&tui, "tui", false, "launch the tui")
 	flag.StringVar(&field, "field", "", "search field")
-	flag.StringVar(&searchType, "type", "Search", "Choose Typeahead or Search")
+	flag.StringVar(&searchType, "type", "", "Choose Typeahead or Search")
 	flag.StringVar(&vendor, "vendor", "", "search vendor")
 	flag.StringVar(&product, "product", "", "search product")
 	flag.StringVar(&username, "username", "", "search username")
@@ -44,24 +45,50 @@ func init() {
 
 }
 
-func main() {
-	flag.Parse()
+var Usage = func() {
 	fmt.Println(Splash)
+	flag.PrintDefaults()
+}
+
+func main() {
+	flag.Usage = Usage
+	flag.Parse()
 
 	if apiKey == "" {
-		if tui {
+		var err error
+		apiKey, err = utils.GetCreds()
+		if tui && err != nil {
 			fmt.Println("You must provide an API key")
 			fmt.Print("API Key: ")
 			fmt.Scanln(&apiKey)
 
-		} else {
+		} else if err != nil {
 			fmt.Println("Please provide an api key")
+			return
+		} else {
+			fmt.Println("API Key Retrieved")
+		}
+	} else {
+		err := utils.SaveCreds(apiKey)
+		if err != nil {
+			fmt.Println("Error saving api key")
+			fmt.Println(err.Error())
 			return
 		}
 	}
+	c := endpoints.New(apiKey)
+	err := c.CheckKey()
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+
 	if !tui {
+		if searchType == "" {
+			fmt.Println("Please provide a search type")
+			return
+		}
 		if searchType == "Search" {
-			c := endpoints.New(apiKey)
 			if baseUrl != "" {
 				c.ChangeBaseUrl(baseUrl)
 			}
@@ -101,7 +128,7 @@ func main() {
 				}
 			}
 		} else if searchType == "Typeahead" {
-			c := endpoints.New(apiKey)
+
 			if baseUrl != "" {
 				c.ChangeBaseUrl(baseUrl)
 			}
@@ -143,6 +170,7 @@ func main() {
 			}
 		}
 	} else {
+		fmt.Println("Starting TUI")
 		StartTui(apiKey)
 	}
 }

@@ -42,8 +42,7 @@ func (c Client) SearchCredentials(searchMap map[string]string) (CredentialDocume
 		if err != nil {
 			return CredentialDocumentList{}, err
 		}
-		if page == bodyList.Pages+1 {
-			println("No more pages")
+		if page == bodyList.Pages+1 || page == 10 {
 			morePages = false
 			continue
 		}
