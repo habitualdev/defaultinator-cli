@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"github.com/roaldi/defaultinator-cli/endpoints"
-	"github.com/roaldi/defaultinator-cli/utils"
+	"github.com/habitualdev/defaultinator-cli/endpoints"
+	"github.com/habitualdev/defaultinator-cli/utils"
 	"os"
 )
 
