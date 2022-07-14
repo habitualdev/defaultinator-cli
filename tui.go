@@ -5,7 +5,7 @@ import (
 	"github.com/atotto/clipboard"
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
-	"github.com/roaldi/defaultinator-cli/endpoints"
+	"github.com/habitualdev/defaultinator-cli/endpoints"
 	"time"
 )
 
