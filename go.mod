@@ -1,4 +1,4 @@
-module github.com/roaldi/defaultinator-cli
+module github.com/habitualdev/defaultinator-cli
 
 go 1.19
 
