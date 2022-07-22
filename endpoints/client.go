@@ -7,7 +7,7 @@ import (
 	"runtime"
 )
 
-const Version = "1.2.2"
+const Version = "1.2.3"
 const BaseUrl = "https://api.defaultinator.com"
 
 var QueryFields = []string{"vendor", "product", "version", "username", "password", "part", "field"}
@@ -43,10 +43,17 @@ type TypeAheadList []TypeAheadEntry
 
 type CredentialDocumentList struct {
 	Docs  []CredentialDocument `json:"docs"`
-	Total int                  `json:"total"`
+	Total int                  `json:"total"` // "totalDocs"
 	Limit int                  `json:"limit"`
 	Page  string               `json:"page"`
-	Pages int                  `json:"pages"`
+	Pages int                  `json:"pages"` // "totalPages"
+	/*
+		pagingCounter int `json:"pagingCounter"`
+		hasPrevPage  bool `json:"hasPrevPage"`
+		hasNextPage  bool `json:"hasNextPage"`
+		prevPage     int `json:"prevPage"`
+		nextPage     int `json:"nextPage"`
+	*/
 }
 
 type CredentialDocument struct {
@@ -83,6 +90,26 @@ type CredentialDocument struct {
 			} `json:"cpe"`
 		} `json:"edit"`
 	} `json:"edits"`
+}
+
+type UniqueCredentialList struct {
+	Docs          []UniqueCredential `json:"docs"`
+	Total         int                `json:"totalDocs"`
+	Limit         int                `json:"limit"`
+	Page          string             `json:"page"`
+	Pages         int                `json:"totalPages"`
+	PagingCounter int                `json:"pagingCounter"`
+	HasPrevPage   bool               `json:"hasPrevPage"`
+	HasNextPage   bool               `json:"hasNextPage"`
+	PrevPage      int                `json:"prevPage"`
+	NextPage      int                `json:"nextPage"`
+}
+
+type UniqueCredential struct {
+	Id struct {
+		Field1 string `json:"field1"`
+		Field2 string `json:"field2"`
+	} `json:"_id"`
 }
 
 func New(apiKey string) Client {

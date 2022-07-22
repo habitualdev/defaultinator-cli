@@ -20,6 +20,7 @@ var part string
 var apiKey string
 var output string
 var baseUrl string
+var unique string
 
 const Splash = `
     ____       ____            ____  _             __                   ________    ____
@@ -42,6 +43,7 @@ func init() {
 	flag.StringVar(&apiKey, "apiKey", "", "api key")
 	flag.StringVar(&output, "output", "", "set output file")
 	flag.StringVar(&baseUrl, "baseUrl", "", "Change to use a different base url")
+	flag.StringVar(&unique, "unique", "", "Return only unique results")
 
 }
 
@@ -108,25 +110,52 @@ func main() {
 			if part != "" {
 				search["part"] = part
 			}
-			list, err := c.SearchCredentials(search)
-			if err != nil {
-				fmt.Println(err)
-				return
+			if unique != "" {
+				search["unique"] = unique
 			}
-			data, err := json.Marshal(list.Docs)
-			if err != nil {
-				fmt.Println(err.Error())
-			} else {
-				if output != "" {
-					fmt.Println("Writing to file")
-					err := os.WriteFile(output, data, 0644)
-					if err != nil {
-						fmt.Println(err.Error())
-					}
-				} else {
-					fmt.Println(string(data))
+
+			if unique == "" {
+				list, err := c.SearchCredentials(search)
+				if err != nil {
+					fmt.Println(err)
+					return
 				}
-			}
+				data, err := json.Marshal(list.Docs)
+				if err != nil {
+					fmt.Println(err.Error())
+				} else {
+					if output != "" {
+						fmt.Println("Writing to file")
+						err := os.WriteFile(output, data, 0644)
+						if err != nil {
+							fmt.Println(err.Error())
+						}
+					} else {
+						fmt.Println(string(data))
+					}
+				}
+			} /* else {
+				list, err := c.SearchCredentialsUnique(search)
+				if err != nil {
+					fmt.Println(err)
+					return
+				}
+				data, err := json.Marshal(list.Docs)
+				if err != nil {
+					fmt.Println(err.Error())
+				} else {
+					if output != "" {
+						fmt.Println("Writing to file")
+						err := os.WriteFile(output, data, 0644)
+						if err != nil {
+							fmt.Println(err.Error())
+						}
+					} else {
+						fmt.Println(string(data))
+					}
+				}
+			} */
+
 		} else if searchType == "Typeahead" {
 
 			if baseUrl != "" {
