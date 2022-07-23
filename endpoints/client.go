@@ -7,7 +7,7 @@ import (
 	"runtime"
 )
 
-const Version = "1.2.3"
+const Version = "1.2.4"
 const BaseUrl = "https://api.defaultinator.com"
 
 var QueryFields = []string{"vendor", "product", "version", "username", "password", "part", "field"}
