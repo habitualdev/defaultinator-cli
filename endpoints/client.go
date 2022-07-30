@@ -7,7 +7,7 @@ import (
 	"runtime"
 )
 
-const Version = "1.2.4"
+const Version = "1.3.0"
 const BaseUrl = "https://api.defaultinator.com"
 
 var QueryFields = []string{"vendor", "product", "version", "username", "password", "part", "field"}
@@ -40,21 +40,6 @@ type TypeAheadEntry struct {
 }
 
 type TypeAheadList []TypeAheadEntry
-
-type CredentialDocumentList struct {
-	Docs  []CredentialDocument `json:"docs"`
-	Total int                  `json:"total"` // "totalDocs"
-	Limit int                  `json:"limit"`
-	Page  string               `json:"page"`
-	Pages int                  `json:"pages"` // "totalPages"
-	/*
-		pagingCounter int `json:"pagingCounter"`
-		hasPrevPage  bool `json:"hasPrevPage"`
-		hasNextPage  bool `json:"hasNextPage"`
-		prevPage     int `json:"prevPage"`
-		nextPage     int `json:"nextPage"`
-	*/
-}
 
 type CredentialDocument struct {
 	Username   string   `json:"username"`
@@ -92,17 +77,60 @@ type CredentialDocument struct {
 	} `json:"edits"`
 }
 
+type CredentialDocumentList struct {
+	Docs []struct {
+		Id         string   `json:"_id"`
+		Username   string   `json:"username"`
+		Password   string   `json:"password"`
+		References []string `json:"references"`
+		Protocol   string   `json:"protocol"`
+		Cpe        struct {
+			Id      string      `json:"_id"`
+			Part    string      `json:"part"`
+			Vendor  string      `json:"vendor"`
+			Product string      `json:"product"`
+			Version interface{} `json:"version"`
+		} `json:"cpe"`
+		IsVerified bool          `json:"isVerified"`
+		Edits      []interface{} `json:"edits"`
+	} `json:"docs"`
+	TotalDocs     int         `json:"totalDocs"`
+	Limit         int         `json:"limit"`
+	TotalPages    int         `json:"totalPages"`
+	Page          int         `json:"page"`
+	PagingCounter int         `json:"pagingCounter"`
+	HasPrevPage   bool        `json:"hasPrevPage"`
+	HasNextPage   bool        `json:"hasNextPage"`
+	PrevPage      interface{} `json:"prevPage"`
+	NextPage      int         `json:"nextPage"`
+}
+
 type UniqueCredentialList struct {
-	Docs          []UniqueCredential `json:"docs"`
-	Total         int                `json:"totalDocs"`
-	Limit         int                `json:"limit"`
-	Page          string             `json:"page"`
-	Pages         int                `json:"totalPages"`
-	PagingCounter int                `json:"pagingCounter"`
-	HasPrevPage   bool               `json:"hasPrevPage"`
-	HasNextPage   bool               `json:"hasNextPage"`
-	PrevPage      int                `json:"prevPage"`
-	NextPage      int                `json:"nextPage"`
+	Docs []struct {
+		Id         string   `json:"_id"`
+		Username   string   `json:"username"`
+		Password   string   `json:"password"`
+		References []string `json:"references"`
+		Protocol   string   `json:"protocol"`
+		Cpe        struct {
+			Id      string      `json:"_id"`
+			Part    string      `json:"part"`
+			Vendor  string      `json:"vendor"`
+			Product string      `json:"product"`
+			Version interface{} `json:"version"`
+		} `json:"cpe"`
+		IsVerified bool          `json:"isVerified"`
+		Edits      []interface{} `json:"edits"`
+	} `json:"docs"`
+	TotalDocs     int         `json:"totalDocs"`
+	Limit         int         `json:"limit"`
+	TotalPages    int         `json:"totalPages"`
+	Page          int         `json:"page"`
+	PagingCounter int         `json:"pagingCounter"`
+	HasPrevPage   bool        `json:"hasPrevPage"`
+	HasNextPage   bool        `json:"hasNextPage"`
+	PrevPage      interface{} `json:"prevPage"`
+	NextPage      int         `json:"nextPage"`
 }
 
 type UniqueCredential struct {

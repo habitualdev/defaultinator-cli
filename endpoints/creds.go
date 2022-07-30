@@ -42,7 +42,7 @@ func (c Client) SearchCredentials(searchMap map[string]string) (CredentialDocume
 		if err != nil {
 			return CredentialDocumentList{}, err
 		}
-		if page == bodyList.Pages+1 || page == 10 {
+		if page == bodyList.TotalPages+1 || page == 10 {
 			morePages = false
 			continue
 		}
@@ -87,7 +87,7 @@ func (c Client) SearchCredentialsUnique(searchMap map[string]string) (UniqueCred
 		if err != nil {
 			return UniqueCredentialList{}, err
 		}
-		if page == bodyList.Pages+1 || page == 10 {
+		if page == bodyList.TotalPages+1 || page == 10 {
 			morePages = false
 			continue
 		}

@@ -134,7 +134,7 @@ func main() {
 						fmt.Println(string(data))
 					}
 				}
-			} /* else {
+			} else {
 				list, err := c.SearchCredentialsUnique(search)
 				if err != nil {
 					fmt.Println(err)
@@ -154,7 +154,7 @@ func main() {
 						fmt.Println(string(data))
 					}
 				}
-			} */
+			}
 
 		} else if searchType == "Typeahead" {
 

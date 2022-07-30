@@ -33,6 +33,8 @@ At this time it is a "read-only" interface, but it will be expanded in the futur
         search username
   -vendor
         search vendor
+  -unique (true)
+        search unique
 ```
 
 ## TUI Interface 
